@@ -1,53 +1,59 @@
 //* imports:
 const connection = require('../database/');
+const checkURL = require('../helpers');
 
-//GET:
-const getProducts = async (req, res) => {
-
-  // Initializations:
-  let GET_query = `SELECT * FROM productos `;
+//? GET:
+const GET = async (req, res) => {
+  // initializations:
   let limit = '';
   let where = '';
 
-  // Pagination:
+  // destructuring:
+  const { tableName } = checkURL(req.baseUrl);
+
+  // pagination:
   if (req.query.page) {
     const size = 5;
     const operation = (req.query.page - 1) * size;
     limit += `LIMIT ${operation}, ${size}`;
   }
-  // Query:
-  await connection.query(`${GET_query} ${where} ${limit}`, (error, result) => {
-    !error && result.length > 0 ? res.json(result) : res.status(500).json({ message: 'No more products' });
+  // query:
+  await connection.query(`SELECT * FROM ${tableName} ${where} ${limit}`, (error, result) => {
+    !error && result.length > 0 ? res.json(result) : res.status(500).json('No more products');
   });
-  // console.log(req.baseUrl);
 };
 
-//GET id:
-const getProductById = async (req, res) => {
+//? GET by id:
+const GET_ID = async (req, res) => {
+  // destructuring:
+  const { tableName, id_table } = checkURL(req.baseUrl);
+
   await connection.query(
-    `SELECT * FROM productos WHERE id_producto = ${req.params.idProduct}`,
+    `SELECT * FROM ${tableName} WHERE ${id_table} = ${req.params.id}`,
     (error, result) => {
-      !error && result.length > 0
-        ? res.status(200).json(result)
-        : res.status(404).json({ message: 'Product not found' });
+      !error && result.length > 0 ? res.status(200).json(result) : res.status(404).json('Product not found');
     }
   );
 };
 
-//POST:
-const addProduct = async (req, res) => {
-  await connection.query('INSERT INTO productos SET ?', [req.body], (error) => {
-    !error
-      ? res.status(201).json({ message: 'Product added' })
-      : res.status(500).json({ message: 'Something goes wrong' });
+//? POST:
+const POST = async (req, res) => {
+  // destructuring:
+  const { tableName } = checkURL(req.baseUrl);
+
+  await connection.query(`INSERT INTO ${tableName} SET ?`, [req.body], (error) => {
+    !error ? res.status(201).json('Product added') : res.status(500).json('Something goes wrong');
   });
 };
 
-//PUT:
-const updateProduct = async (req, res) => {
+//? PUT:
+const UPDATE = async (req, res) => {
+  // destructuring:
+  const { tableName, id_table } = checkURL(req.baseUrl);
+
   await connection.query(
-    'UPDATE productos SET ? WHERE id_producto = ?',
-    [req.body, req.params.idProduct],
+    `UPDATE ${tableName} SET ? WHERE ${id_table} = ?`,
+    [req.body, req.params.id],
     (error, result) => {
       !error && result.affectedRows > 0
         ? res.status(202).json('User updated')
@@ -56,11 +62,14 @@ const updateProduct = async (req, res) => {
   );
 };
 
-//DELETE:
-const deleteProduct = async (req, res) => {
+// DELETE:
+const DELETE = async (req, res) => {
+  // destructuring:
+  const { tableName, id_table } = checkURL(req.baseUrl);
+
   await connection.query(
-    'DELETE FROM productos WHERE id_producto = ?',
-    [req.params.idProduct],
+    `DELETE FROM ${tableName} WHERE ${id_table} = ?`,
+    [req.params.id],
     (error, result) => {
       !error && result.affectedRows > 0
         ? res.status(202).json('Product deleted')
@@ -70,10 +79,4 @@ const deleteProduct = async (req, res) => {
 };
 
 //* exports:
-module.exports = {
-  getProducts,
-  getProductById,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-};
+module.exports = { GET, GET_ID, POST, UPDATE, DELETE };

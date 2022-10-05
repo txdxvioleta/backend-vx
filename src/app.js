@@ -13,7 +13,7 @@ app.use(express.json());
 
 //* routes:
 app.use('/products', routes);
-//app.use('/categories',routes);
+app.use('/categories',routes);
 
 //* exports:
 module.exports = app;

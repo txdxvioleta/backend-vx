@@ -1,27 +1,21 @@
 //* imports:
 const router = require('express').Router();
-const {
-  getProducts,
-  getProductById,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-} = require('../controllers/');
+const { GET, GET_ID, POST, UPDATE, DELETE } = require('../controllers/');
 
 //* GET:
-router.get('/', getProducts);
+router.get('/', GET);
 
 //* GET id:
-router.get('/:idProduct', getProductById);
+router.get('/:id', GET_ID);
 
 //* POST:
-router.post('/', addProduct);
+router.post('/', POST);
 
 //* PUT:
-router.put('/:idProduct', updateProduct);
+router.put('/:id', UPDATE);
 
 //* DELETE:
-router.delete('/:idProduct', deleteProduct);
+router.delete('/:id', DELETE);
 
 //* exports:
 module.exports = router;
