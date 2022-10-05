@@ -6,10 +6,15 @@ const checkURL = require('../helpers');
 const GET = async (req, res) => {
   // initializations:
   let limit = '';
-  let where = '';
+  let where = 'WHERE TRUE ';
 
   // destructuring:
   const { tableName } = checkURL(req.baseUrl);
+
+  // filters:
+  if (req.query.category) {
+    where += `AND categoria = '${req.query.category}'`;
+  }
 
   // pagination:
   if (req.query.page) {
@@ -19,7 +24,7 @@ const GET = async (req, res) => {
   }
   // query:
   await connection.query(`SELECT * FROM ${tableName} ${where} ${limit}`, (error, result) => {
-    !error && result.length > 0 ? res.json(result) : res.status(500).json('No more products');
+    !error && result.length > 0 ? res.json(result) : res.status(500).json('No results');
   });
 };
 
@@ -31,7 +36,7 @@ const GET_ID = async (req, res) => {
   await connection.query(
     `SELECT * FROM ${tableName} WHERE ${id_table} = ${req.params.id}`,
     (error, result) => {
-      !error && result.length > 0 ? res.status(200).json(result) : res.status(404).json('Product not found');
+      !error && result.length > 0 ? res.status(200).json(result) : res.status(404).json('No results');
     }
   );
 };
@@ -42,7 +47,7 @@ const POST = async (req, res) => {
   const { tableName } = checkURL(req.baseUrl);
 
   await connection.query(`INSERT INTO ${tableName} SET ?`, [req.body], (error) => {
-    !error ? res.status(201).json('Product added') : res.status(500).json('Something goes wrong');
+    !error ? res.status(201).json('Added successfully') : res.status(500).json('Error inserting data');
   });
 };
 
@@ -56,8 +61,8 @@ const UPDATE = async (req, res) => {
     [req.body, req.params.id],
     (error, result) => {
       !error && result.affectedRows > 0
-        ? res.status(202).json('User updated')
-        : res.status(404).json('User not found');
+        ? res.status(202).json('Updated successfully')
+        : res.status(404).json('No results');
     }
   );
 };
@@ -72,8 +77,8 @@ const DELETE = async (req, res) => {
     [req.params.id],
     (error, result) => {
       !error && result.affectedRows > 0
-        ? res.status(202).json('Product deleted')
-        : res.status(404).json('Product not found');
+        ? res.status(202).json('Deleted successfully')
+        : res.status(404).json('No results');
     }
   );
 };
