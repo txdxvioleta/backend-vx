@@ -1,7 +1,8 @@
 //* imports:
 require('dotenv').config();
 
-const routes = require('./routes');
+const routes_products = require('./routes/routesProducts');
+const routes_categories = require('./routes/routesCategories');
 const express = require('express');
 
 //* initialization:
@@ -12,8 +13,8 @@ app.set('port', process.env.PORT || 8080);
 app.use(express.json());
 
 //* routes:
-app.use('/products', routes);
-app.use('/categories',routes);
+app.use('/products', routes_products);
+app.use('/categories', routes_categories);
 
 //* exports:
 module.exports = app;
