@@ -27,7 +27,7 @@ const getByCategory = async (req, res) => {
     limit += `LIMIT ${operation}, ${size}`;
   }
   await connection.query(
-    `SELECT * FROM categorias WHERE categoria = '${req.params.category}' ${limit}`,
+    `SELECT * FROM categorias WHERE nombre_categ = '${req.params.category}' ${limit}`,
     (error, result) => {
       !error && result.length > 0 ? res.status(200).json(result) : res.status(404).json('No results');
     }
