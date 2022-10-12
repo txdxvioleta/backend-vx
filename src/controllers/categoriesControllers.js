@@ -1,5 +1,5 @@
 //* imports:
-const connection = require('../database/dbConfig');
+const connection = require('../models/dbConfig');
 
 const getAllCategories = async (req, res) => {
   // pagination:

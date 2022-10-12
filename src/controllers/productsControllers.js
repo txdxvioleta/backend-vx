@@ -1,5 +1,5 @@
 //* imports:
-const connection = require('../database/dbConfig');
+const connection = require('../models/dbConfig');
 
 const getAllProducts = async (req, res) => {
   // pagination:
@@ -19,8 +19,11 @@ const getAllProducts = async (req, res) => {
 
 const getProductByCategory = async (req, res) => {
   await connection.query(
-    `SELECT * FROM productos p,categorias c 
-  WHERE c.id_categoria = p.id_categ AND c.nombre_categ = '${req.params.category}'`,
+    `
+    SELECT * FROM productos p,categorias c 
+    WHERE c.id_categoria = p.id_categ 
+    AND c.nombre_categ = '${req.params.category}'
+    `,
     (error, result) => {
       !error && result.length > 0 ? res.status(200).json(result) : res.status(404).json('Category not found');
     }
