@@ -179,6 +179,3 @@ If you have any feedback, please reach out to us at gcaram95@gmail.com
 ## Authors
 
 - [@txdxvioleta](https://www.github.com/txdxvioleta)
-
-
-![Logo](https://i.im.ge/2022/10/09/1GoDEf.generatedtext-10-1.png)
