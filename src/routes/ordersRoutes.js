@@ -2,12 +2,13 @@
 const router = require('express').Router();
 const {
   getAllOrders,
-  getAllProductsOrders,
   createOrder,
+  deleteOrder,
+  getAllProductsOrders,
+  getProductOrderById,
   addProductOrder,
   updateProductOrder,
   deleteProductOrder,
-  deleteOrder,
 } = require('../controllers/ordersControllers');
 
 //* orders:
@@ -17,6 +18,7 @@ router.delete('/:id', deleteOrder);
 
 router.post('/products', addProductOrder);
 router.get('/products', getAllProductsOrders);
+router.get('/products/:id_order', getProductOrderById);
 router.put('/products/:id', updateProductOrder);
 router.delete('/products/:id', deleteProductOrder);
 
